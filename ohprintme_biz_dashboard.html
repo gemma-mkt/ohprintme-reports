@@ -7,17 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d0d0d;
-    --surface: #161616;
-    --surface2: #1e1e1e;
-    --border: #2a2a2a;
-    --accent: #c8f135;
-    --accent2: #4af0c4;
-    --accent3: #ff6b6b;
-    --accent4: #ffd166;
-    --text: #f0f0f0;
-    --text-muted: #666;
-    --text-dim: #999;
+    --bg: #f5f5f3;
+    --surface: #ffffff;
+    --surface2: #f0f0ee;
+    --border: #e0e0dd;
+    --accent: #5c8a00;
+    --accent2: #0d8f6f;
+    --accent3: #d93636;
+    --accent4: #c47d00;
+    --text: #1a1a1a;
+    --text-muted: #888;
+    --text-dim: #555;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -44,7 +44,7 @@
     top: -80px; right: -80px;
     width: 320px; height: 320px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,241,53,0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(92,138,0,0.08) 0%, transparent 70%);
     pointer-events: none;
   }
   .header-label {
@@ -255,11 +255,11 @@
   td {
     padding: 10px 12px;
     font-size: 13px;
-    border-bottom: 1px solid #1a1a1a;
+    border-bottom: 1px solid #f0f0ee;
     vertical-align: middle;
   }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.02); }
+  tr:hover td { background: rgba(0,0,0,0.02); }
   .badge {
     display: inline-block;
     padding: 2px 8px;
@@ -268,11 +268,11 @@
     font-weight: 700;
     font-family: 'DM Mono', monospace;
   }
-  .badge-green { background: rgba(200,241,53,0.15); color: var(--accent); }
-  .badge-teal { background: rgba(74,240,196,0.15); color: var(--accent2); }
-  .badge-red { background: rgba(255,107,107,0.15); color: var(--accent3); }
-  .badge-yellow { background: rgba(255,209,102,0.15); color: var(--accent4); }
-  .badge-gray { background: rgba(255,255,255,0.08); color: var(--text-dim); }
+  .badge-green { background: rgba(92,138,0,0.12); color: var(--accent); }
+  .badge-teal { background: rgba(13,143,111,0.12); color: var(--accent2); }
+  .badge-red { background: rgba(217,54,54,0.12); color: var(--accent3); }
+  .badge-yellow { background: rgba(196,125,0,0.12); color: var(--accent4); }
+  .badge-gray { background: rgba(0,0,0,0.06); color: var(--text-dim); }
 
   /* INSIGHT BOX */
   .insight-grid {
@@ -322,7 +322,7 @@
     gap: 12px;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #1a1a1a;
+    border-bottom: 1px solid #ebebeb;
   }
   .gap-row:last-child { border-bottom: none; }
   .gap-row-header {
@@ -497,7 +497,7 @@
             </tr>
           </tbody>
         </table>
-        <div style="margin-top:16px;padding:12px;background:rgba(200,241,53,0.06);border-radius:8px;border:1px solid rgba(200,241,53,0.15)">
+        <div style="margin-top:16px;padding:12px;background:rgba(92,138,0,0.06);border-radius:8px;border:1px solid rgba(92,138,0,0.15)">
           <div style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:4px">🔑 핵심</div>
           <div style="font-size:12px;color:var(--text-dim)">스티커·명함은 전 용도 관통하는 범용 앵커 카테고리. 직장·학교 세그먼트만 배너&현수막이 두드러짐.</div>
         </div>
@@ -761,7 +761,7 @@
           </tr>
         </tbody>
       </table>
-      <div style="margin-top:16px;padding:12px;background:rgba(255,107,107,0.06);border-radius:8px;border:1px solid rgba(255,107,107,0.2)">
+      <div style="margin-top:16px;padding:12px;background:rgba(217,54,54,0.06);border-radius:8px;border:1px solid rgba(217,54,54,0.2)">
         <div style="font-size:12px;color:var(--accent3);font-weight:700;margin-bottom:4px">⚠ 어패럴 분석 주의사항</div>
         <div style="font-size:12px;color:var(--text-dim)">개인 취미 세그먼트의 어패럴 수치는 샘플 바이럴 영향으로 왜곡되어 있음. 90일 재구매율 확인 후 실수요 세그먼트와 샘플 유입 세그먼트를 분리해서 CRM 대상을 결정할 것.</div>
       </div>
@@ -778,7 +778,7 @@
         <h3>음식·카페 × 스티커 → 사인&포스터 교차판매</h3>
         <p>스티커 구매자 2,004건으로 최대 볼륨 세그먼트. 스티커 첫 구매 후 사인&포스터·카드로 이어지는 교차판매 경로가 자연스러움. 구매 완료 후 10~14일 시점 LMS 발송.</p>
         <div style="margin-top:14px;font-size:12px;color:var(--text-dim);font-style:italic">"스티커 잘 받으셨죠? 매장 입구에 이것도 어때요?"</div>
-        <span class="tag" style="background:rgba(200,241,53,0.12);color:var(--accent)">내 사업 × 음식·카페</span>
+        <span class="tag" style="background:rgba(92,138,0,0.10);color:var(--accent)">내 사업 × 음식·카페</span>
       </div>
 
       <div class="insight-card">
@@ -786,14 +786,14 @@
         <h3>직장 × 경영지원·인사·총무 → 명함 재구매 사이클 CRM</h3>
         <p>명함 주문수 451건으로 이 세그먼트 내 압도적 1위. 명함은 소모성 제품이라 재구매 주기가 명확. 마지막 명함 주문일 기준 3~4개월 후 리마인드 LMS 설계.</p>
         <div style="margin-top:14px;font-size:12px;color:var(--text-dim);font-style:italic">"명함 슬슬 떨어질 때 됐죠? 다시 맞추러 오세요."</div>
-        <span class="tag" style="background:rgba(74,240,196,0.12);color:var(--accent2)">직장 × 경영지원·인사</span>
+        <span class="tag" style="background:rgba(13,143,111,0.10);color:var(--accent2)">직장 × 경영지원·인사</span>
       </div>
 
       <div class="insight-card">
         <div class="num">ACTION 03</div>
         <h3>MD·캘린더 장바구니 미전환 → 소액 쿠폰 전환 유도</h3>
         <p>MD 비율 1.15x, 캘린더 1.13x — 구매보다 장바구니 담기가 많은 카테고리. MD는 상시 쿠폰으로, 캘린더는 11~12월 시즌 집중 발송. 1,000~2,000원 소액 할인으로 전환 마찰 제거.</p>
-        <span class="tag" style="background:rgba(255,107,107,0.12);color:var(--accent3)">MD·캘린더 장바구니 유저</span>
+        <span class="tag" style="background:rgba(217,54,54,0.10);color:var(--accent3)">MD·캘린더 장바구니 유저</span>
       </div>
 
       <div class="insight-card">
@@ -801,21 +801,21 @@
         <h3>뷰티·헬스 → 명함 첫 구매 후 스티커 유도</h3>
         <p>뷰티·헬스·운동은 명함이 1위인 유일한 업종. 명함 구매 완료 후 스티커로 이어지는 크로스셀이 자연스러운 구조. 패키지 할인 제안도 유효.</p>
         <div style="margin-top:14px;font-size:12px;color:var(--text-dim);font-style:italic">"명함 받으셨나요? 패키지 스티커도 함께 하면 더 좋아요!"</div>
-        <span class="tag" style="background:rgba(255,209,102,0.12);color:var(--accent4)">내 사업 × 뷰티·헬스</span>
+        <span class="tag" style="background:rgba(196,125,0,0.10);color:var(--accent4)">내 사업 × 뷰티·헬스</span>
       </div>
 
       <div class="insight-card">
         <div class="num">ACTION 05</div>
         <h3>학교·동아리 × 교육업종 → 배너 시즌 CRM</h3>
         <p>배너&현수막 수요가 타 용도 대비 유독 높음. 입학(2~3월), 졸업(12~2월), 축제(5·10월) 시즌 전 3~4주 LMS 선제 발송. 배너 첫 구매자 대상 사인&포스터 교차판매도 병행.</p>
-        <span class="tag" style="background:rgba(200,241,53,0.12);color:var(--accent)">학교·동아리 × 교육</span>
+        <span class="tag" style="background:rgba(92,138,0,0.10);color:var(--accent)">학교·동아리 × 교육</span>
       </div>
 
       <div class="insight-card">
         <div class="num">ACTION 06</div>
         <h3>어패럴 샘플 유입 세그먼트 — 실수요 검증 선행</h3>
         <p>개인 취미 × 교육·학원·학교 어패럴 구매자 1,145명은 수치가 크지만 샘플 이벤트 유입 비중 파악이 먼저. 90일 재구매율 확인 후 실수요 세그먼트와 분리해서 CRM 대상 결정.</p>
-        <span class="tag" style="background:rgba(255,107,107,0.12);color:var(--accent3)">검증 선행 필요</span>
+        <span class="tag" style="background:rgba(217,54,54,0.10);color:var(--accent3)">검증 선행 필요</span>
       </div>
     </div>
 
