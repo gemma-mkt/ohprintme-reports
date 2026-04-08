@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오프린트미 풀퍼널 ROI 주간 보고서 W14</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --primary: #6c5ce7;
+  --success: #00b894;
+  --blue: #0984e3;
+  --warning: #fdcb6e;
+  --danger: #d63031;
+  --bg: #f5f6fa;
+  --card: #ffffff;
+  --text: #2d3436;
+  --text-light: #636e72;
+  --border: #dfe6e9;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+.container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+/* Header */
+.header { background: linear-gradient(135deg, #2d1b69 0%, #4a1c96 50%, #6c5ce7 100%); color: white; padding: 36px 40px; border-radius: 16px; margin-bottom: 24px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+.header .meta { font-size: 13px; opacity: 0.75; display: flex; gap: 24px; flex-wrap: wrap; }
+.header .meta span::before { content: '📌 '; }
+
+/* KPI Grid */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.kpi-card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-top: 4px solid; }
+.kpi-card:nth-child(1) { border-color: var(--primary); }
+.kpi-card:nth-child(2) { border-color: var(--success); }
+.kpi-card:nth-child(3) { border-color: var(--blue); }
+.kpi-card:nth-child(4) { border-color: var(--warning); }
+.kpi-label { font-size: 12px; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.kpi-value { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+.kpi-card:nth-child(1) .kpi-value { color: var(--primary); }
+.kpi-card:nth-child(2) .kpi-value { color: var(--success); }
+.kpi-card:nth-child(3) .kpi-value { color: var(--blue); }
+.kpi-card:nth-child(4) .kpi-value { color: #e17055; }
+.kpi-sub { font-size: 12px; color: var(--text-light); }
+
+/* Section */
+.section { background: var(--card); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section-title::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--primary); border-radius: 2px; }
+
+/* Summary */
+.summary-list { list-style: none; }
+.summary-list li { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; line-height: 1.6; }
+.summary-list li:last-child { border-bottom: none; }
+
+/* Charts */
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chart-box { background: var(--bg); border-radius: 8px; padding: 16px; }
+.chart-box h4 { font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 12px; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: #f8f9fa; }
+thead th { padding: 10px 12px; text-align: right; font-weight: 600; color: var(--text-light); border-bottom: 2px solid var(--border); white-space: nowrap; }
+thead th:first-child { text-align: left; }
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:hover { background: #f8f5ff; }
+tbody td { padding: 10px 12px; text-align: right; white-space: nowrap; }
+tbody td:first-child { text-align: left; font-weight: 500; }
+.total-row { background: #f0ecff !important; font-weight: 700; }
+.highlight { background: #fff3e0 !important; }
+.alert-row td { color: var(--danger); }
+
+/* Tags */
+.tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.tag.paid { background: #dff3ff; color: #0984e3; }
+.tag.organic { background: #d4fce8; color: #00b894; }
+.tag.crm { background: #fff3cd; color: #e17055; }
+.tag.homepage { background: #ede7ff; color: #6c5ce7; }
+.tag.sa { background: #e8f4fd; color: #2980b9; }
+.tag.da { background: #fce4ec; color: #c0392b; }
+.tag.custom { background: #ffebee; color: #b71c1c; }
+
+/* Insight Box */
+.insight-box { border-left: 4px solid var(--primary); background: #f5f0ff; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 13px; line-height: 1.6; }
+.insight-box.warning { border-color: var(--warning); background: #fffbf0; }
+.insight-box.success { border-color: var(--success); background: #f0fff8; }
+.insight-box.danger { border-color: var(--danger); background: #fff5f5; }
+.insight-box.info { border-color: var(--blue); background: #f0f7ff; }
+
+/* Limitation Box */
+.limitation-box { background: #fffde7; border: 1px solid #f9ca24; border-radius: 8px; padding: 14px 16px; margin-top: 16px; font-size: 13px; }
+.limitation-box strong { display: block; margin-bottom: 8px; }
+.limitation-box ul { padding-left: 16px; }
+.limitation-box li { margin-bottom: 4px; line-height: 1.5; }
+
+/* Action Items */
+.action-list { list-style: none; counter-reset: action; }
+.action-list li { counter-increment: action; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-start; }
+.action-list li::before { content: counter(action); display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; background: var(--primary); color: white; border-radius: 50%; font-size: 12px; font-weight: 700; }
+
+@media (max-width: 768px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .chart-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+  <h1>📊 오프린트미 풀퍼널 ROI 주간 보고서</h1>
+  <div class="meta">
+    <span>분석 기간: 2026.03.30 (월) ~ 2026.04.05 (일) · W14</span>
+    <span>데이터 출처: GA4 (analytics_335767979) + 내부 DB</span>
+    <span>기준: 국내(KOR) 유효 주문 · VAT 제외 · BI 공식 매출 (쿠폰 차감 없음)</span>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">💰 실결제 매출</div>
+    <div class="kpi-value">3.19억원</div>
+    <div class="kpi-sub">319,081,316원 (VAT 제외, 맞춤제작 대형주문 포함)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">📈 GA4 총 세션</div>
+    <div class="kpi-value">11,460</div>
+    <div class="kpi-sub">유니크 유저 7,075명 (03-31~04-05, 6일)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">🛒 총 주문 건수</div>
+    <div class="kpi-value">5,179건</div>
+    <div class="kpi-sub">구매자 4,493명</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">🎯 객단가 (AOV)</div>
+    <div class="kpi-value">61,611원</div>
+    <div class="kpi-sub">스냅스(28,019원) 대비 2.2배 높은 객단가</div>
+  </div>
+</div>
+
+<!-- 3줄 요약 -->
+<div class="section">
+  <div class="section-title">3줄 요약</div>
+  <ul class="summary-list">
+    <li>① <strong>4/3(금) 매출 1.5억원 급등 — 맞춤제작 대형 주문 1건 영향</strong> — 주간 실결제 매출 3.19억 중 1.29억이 맞춤제작(CustomOrder) 1건. 이상값 제외 시 실매출은 약 1.90억원 추정. 대형 B2B 주문에 의한 변동성으로, 일반 수요 트렌드와 분리 해석 필요.</li>
+    <li>② <strong>스티커·명함이 거래 건수 60% 차지 — 소규모 반복 구매 핵심</strong> — 스티커(1,649건)·명함(1,531건) 합산 3,180건으로 전체 주문의 61.4%. 각각 객단가 33,279원·23,849원으로 저단가·고빈도 패턴. 재구매율 강화 CRM 전략 적합.</li>
+    <li>③ <strong>GA4 세션 대비 결제 전환율 2.9%</strong> — 주간 세션 11,460 대비 GA4 purchase 331건. 스냅스(6.65%) 절반 수준. 상품조회→장바구니 전환(18.1%)에 비해 장바구니→결제완료 전환(14.2%)이 낮아 결제 단계 이탈 개선 필요.</li>
+  </ul>
+</div>
+
+<!-- 일별 추이 차트 -->
+<div class="section">
+  <div class="section-title">일별 매출 · 주문 · 퍼널 추이</div>
+  <div class="insight-box warning">
+    ⚠️ 2026-04-03(금) 매출 150,591,735원 급등 — 맞춤제작(CustomOrder) 대형 주문 1건(129M) 영향. 이상값 포함 그래프임을 참고.
+  </div>
+  <div class="chart-grid" style="margin-top:16px">
+    <div class="chart-box">
+      <h4>일별 매출 (원) · 주문건수</h4>
+      <canvas id="dailyRevenueChart" height="220"></canvas>
+    </div>
+    <div class="chart-box">
+      <h4>GA4 퍼널 추이 (세션→결제완료, 03-31~04-05)</h4>
+      <canvas id="dailyFunnelChart" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 채널 카테고리별 풀퍼널 -->
+<div class="section">
+  <div class="section-title">GA4 퍼널 합계 (주간 누적, 03-31~04-05)</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>퍼널 단계</th>
+          <th>이벤트 수</th>
+          <th>전 단계 대비</th>
+          <th>세션 대비</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>세션 시작 (session_start)</td>
+          <td>11,460</td>
+          <td>—</td>
+          <td>100%</td>
+        </tr>
+        <tr>
+          <td>상품 조회 (view_item)</td>
+          <td>14,483</td>
+          <td>—</td>
+          <td>126.4%</td>
+        </tr>
+        <tr>
+          <td>장바구니 추가 (add_to_cart)</td>
+          <td>2,357</td>
+          <td>16.3%</td>
+          <td>20.6%</td>
+        </tr>
+        <tr>
+          <td>결제 시작 (begin_checkout)</td>
+          <td>1,219</td>
+          <td>51.7%</td>
+          <td>10.6%</td>
+        </tr>
+        <tr class="total-row">
+          <td>결제 완료 (purchase)</td>
+          <td>331</td>
+          <td>27.2%</td>
+          <td>2.9%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="insight-box info" style="margin-top:16px">
+    💡 view_item이 세션 수를 초과(126%)하는 것은 한 세션에서 복수 상품 조회를 의미. 오프린트미는 견적 비교 목적 방문이 많은 B2B 특성 반영.
+  </div>
+
+  <div class="limitation-box" style="margin-top:16px">
+    <strong>⚠ 데이터 제약: Airbridge MMP 미연동</strong>
+    <ul>
+      <li>오프린트미 Airbridge 웹(ohprint_web) 테이블 W14 기간 데이터 없음 — 채널별 MMP 유입/전환 분석 불가</li>
+      <li>GA4만으로 채널별 상세 풀퍼널 측정 중 (GA4 collected_traffic_source 기준)</li>
+      <li>오프린트미는 앱 없음 → Airbridge 앱 이벤트 해당 없음</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 상품 카테고리별 매출 -->
+<div class="section">
+  <div class="section-title">상품 카테고리별 매출 (DB 기준, BI 공식 — order_price / 1.1)</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>카테고리</th>
+          <th>주문건수</th>
+          <th>구매자수</th>
+          <th>카테고리 매출</th>
+          <th>매출비중</th>
+          <th>객단가</th>
+          <th>주문수량</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="alert-row">
+          <td><span class="tag custom">⚠️ 맞춤제작</span> CustomOrder</td>
+          <td>6</td>
+          <td>1</td>
+          <td>129,386,973원</td>
+          <td>40.2%</td>
+          <td>21,564,495원</td>
+          <td>6</td>
+        </tr>
+        <tr class="highlight">
+          <td>🏷 스티커</td>
+          <td>1,649</td>
+          <td>1,526</td>
+          <td>54,877,332원</td>
+          <td>17.0%</td>
+          <td>33,279원</td>
+          <td>990,822</td>
+        </tr>
+        <tr>
+          <td>💼 명함</td>
+          <td>1,531</td>
+          <td>1,411</td>
+          <td>36,512,455원</td>
+          <td>11.3%</td>
+          <td>23,849원</td>
+          <td>600,350</td>
+        </tr>
+        <tr>
+          <td>👕 어패럴</td>
+          <td>380</td>
+          <td>363</td>
+          <td>23,302,682원</td>
+          <td>7.2%</td>
+          <td>61,323원</td>
+          <td>1,457</td>
+        </tr>
+        <tr>
+          <td>📢 홍보물</td>
+          <td>317</td>
+          <td>306</td>
+          <td>19,463,727원</td>
+          <td>6.0%</td>
+          <td>61,400원</td>
+          <td>283,620</td>
+        </tr>
+        <tr>
+          <td>🚩 배너&현수막</td>
+          <td>610</td>
+          <td>507</td>
+          <td>17,493,909원</td>
+          <td>5.4%</td>
+          <td>28,679원</td>
+          <td>1,927</td>
+        </tr>
+        <tr>
+          <td>🪧 사인&포스터</td>
+          <td>739</td>
+          <td>621</td>
+          <td>12,566,000원</td>
+          <td>3.9%</td>
+          <td>17,004원</td>
+          <td>12,085</td>
+        </tr>
+        <tr>
+          <td>💌 카드</td>
+          <td>500</td>
+          <td>452</td>
+          <td>10,521,273원</td>
+          <td>3.3%</td>
+          <td>21,043원</td>
+          <td>176,160</td>
+        </tr>
+        <tr>
+          <td>🛍 MD</td>
+          <td>248</td>
+          <td>235</td>
+          <td>9,804,509원</td>
+          <td>3.0%</td>
+          <td>39,534원</td>
+          <td>3,614</td>
+        </tr>
+        <tr>
+          <td>📦 봉투&쇼핑백</td>
+          <td>62</td>
+          <td>61</td>
+          <td>6,711,091원</td>
+          <td>2.1%</td>
+          <td>108,243원</td>
+          <td>24,660</td>
+        </tr>
+        <tr>
+          <td>💎 악세사리</td>
+          <td>188</td>
+          <td>182</td>
+          <td>1,076,818원</td>
+          <td>0.3%</td>
+          <td>5,728원</td>
+          <td>2,236</td>
+        </tr>
+        <tr>
+          <td>📅 달력</td>
+          <td>15</td>
+          <td>14</td>
+          <td>189,636원</td>
+          <td>0.1%</td>
+          <td>12,642원</td>
+          <td>25</td>
+        </tr>
+        <tr>
+          <td>🎁 샘플팩</td>
+          <td>15</td>
+          <td>15</td>
+          <td>0원</td>
+          <td>0%</td>
+          <td>0원</td>
+          <td>15</td>
+        </tr>
+        <tr class="total-row">
+          <td>합계</td>
+          <td>6,260</td>
+          <td>—</td>
+          <td>321,906,405원</td>
+          <td>100%</td>
+          <td>—</td>
+          <td>2,096,977</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="insight-box danger" style="margin-top:16px">
+    ⚠️ <strong>맞춤제작 1명 구매자 — 129M원 대형 주문 이상값</strong> — 4/3(금) 집중 발생. B2B 대형 고객사 추정. 정기 보고 지표에서 이상값 처리 여부를 팀 내 기준으로 확정 필요.
+  </div>
+  <div class="insight-box success">
+    ✅ <strong>스티커·명함 비수기 선방</strong> — 맞춤제작 제외 시 스티커(54.9M)·명함(36.5M) 합산 91.4M으로 일반 매출의 48.1%. 소규모 B2B 고객의 꾸준한 반복 수요 확인.
+  </div>
+</div>
+
+<!-- Paid 매체 상세 -->
+<div class="section">
+  <div class="section-title">Paid 매체 현황 (데이터 제약)</div>
+  <div class="limitation-box">
+    <strong>⚠ 오프린트미 Airbridge MMP 데이터 W14 기간 수집 없음</strong>
+    <ul>
+      <li><code>airbridgemmp.ohprint_web</code> 테이블에 2026-03-30~04-05 데이터 없음 (BigQuery 집계 결과 0행)</li>
+      <li>GA4 <code>collected_traffic_source</code> 기반 채널 분류로 대체 측정 권장</li>
+      <li>Airbridge 트래킹 링크(ohprint_tracking_link) 별도 확인 또는 MMP 재연동 점검 필요</li>
+    </ul>
+  </div>
+  <div class="insight-box info" style="margin-top:12px">
+    💡 <strong>대응 방안</strong> — GA4 collected_traffic_source.manual_source/medium으로 UTM 기반 채널 분류 가능. 다음 주 보고서부터 GA4 채널 그룹 분석을 병행 적용 예정.
+  </div>
+</div>
+
+<!-- CRM 채널 분석 -->
+<div class="section">
+  <div class="section-title">CRM 채널 분석</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>채널</th>
+          <th>측정 가능 여부</th>
+          <th>현황</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>카카오 알림톡/친구톡</td>
+          <td style="color:var(--danger)">❌ 미측정</td>
+          <td>Airbridge MMP 연동 필요</td>
+        </tr>
+        <tr>
+          <td>이메일</td>
+          <td style="color:var(--danger)">❌ 미측정</td>
+          <td>UTM 파라미터 GA4 연동 필요</td>
+        </tr>
+        <tr>
+          <td>SMS</td>
+          <td style="color:var(--danger)">❌ 미측정</td>
+          <td>Airbridge MMP 연동 필요</td>
+        </tr>
+        <tr>
+          <td>GA4 purchase 이벤트</td>
+          <td style="color:var(--success)">✅ 측정 중</td>
+          <td>331건 (세션 대비 전환율 2.9%)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="insight-box" style="margin-top:16px">
+    💡 오프린트미 CRM 성과 측정을 위해 카카오/SMS 발송 시 Airbridge 트래킹 링크 삽입 및 UTM 표준화가 선행되어야 합니다. ohprint_members 기준 SMS 동의 회원 추출은 현재도 가능.
+  </div>
+</div>
+
+<!-- 인사이트 & 액션 아이템 -->
+<div class="section">
+  <div class="section-title">인사이트 &amp; 액션 아이템</div>
+  <ul class="action-list">
+    <li>
+      <div>
+        <strong>[Airbridge MMP 재연동 긴급 점검]</strong> ohprint_web W14 데이터 0행 — 트래킹 링크 설치 현황 및 BigQuery 파이프라인 점검 필요. 미연동 기간 동안 Paid 채널 성과를 측정할 수 없어 광고 효율 판단 불가.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>[스티커·명함 재구매 CRM 캠페인 설계]</strong> 스티커(1,649건)·명함(1,531건)이 전체 주문 61%. 재구매 주기 분석 후 구매 후 3~4주 시점 카카오 친구톡 또는 이메일 리마인더 발송으로 재구매율 향상 가능.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>[장바구니→결제 이탈 개선]</strong> add_to_cart 2,357건 대비 purchase 331건으로 완결률 14.0%. 장바구니 이탈 고객 대상 24시간 내 이메일/카카오 리마인더 발송 및 소량 쿠폰 제공으로 전환율 개선 테스트 권장.
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- 한계점 -->
+<div class="section">
+  <div class="section-title">데이터 한계점</div>
+  <div class="limitation-box">
+    <strong>⚠ 이번 보고서 데이터 제약사항</strong>
+    <ul>
+      <li><strong>Airbridge MMP 미수집</strong> — ohprint_web W14 데이터 없어 채널별 MMP 유입/전환 분석 불가</li>
+      <li><strong>GA4 03-30 데이터 없음</strong> — events_20260330 테이블 미존재. 6일치(03-31~04-05) 기준 집계</li>
+      <li><strong>광고비 미연동</strong> — ROAS 계산 불가. 매체별 광고비 별도 연동 필요</li>
+      <li><strong>맞춤제작 이상값</strong> — 129M 대형 주문 1건이 KPI 전체를 왜곡. 이상값 제외 매출은 약 190M원 추정</li>
+      <li><strong>오프린트미는 DB + GA4만 연동</strong> — 앱 없음, Airbridge 앱 이벤트 해당 없음</li>
+    </ul>
+  </div>
+</div>
+
+<div style="text-align:center; color:var(--text-light); font-size:12px; padding:20px 0;">
+  생성일시: 2026-04-08 | 데이터 기준: BigQuery (ohprint_orders + GA4 analytics_335767979) | 위블링 마케팅 AI
+</div>
+
+</div><!-- /container -->
+
+<script>
+const labels = ['3/30(월)', '3/31(화)', '4/1(수)', '4/2(목)', '4/3(금)⚠', '4/4(토)', '4/5(일)'];
+const revenues = [35811219, 45964254, 33553578, 31296787, 150591735, 8341989, 13521754];
+const orders   = [956, 948, 939, 904, 741, 278, 413];
+
+const funnelLabels = ['3/31(화)', '4/1(수)', '4/2(목)', '4/3(금)', '4/4(토)', '4/5(일)'];
+const sessions    = [2306, 1766, 1902, 1731, 1837, 1918];
+const viewItem    = [2601, 2039, 2112, 2128, 2781, 2822];
+const addToCart   = [427, 322, 364, 295, 500, 449];
+const beginChk    = [184, 226, 177, 174, 227, 231];
+const purchase    = [52, 65, 51, 47, 53, 63];
+
+// 일별 매출+주문 차트
+new Chart(document.getElementById('dailyRevenueChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: '매출(원)',
+        data: revenues,
+        backgroundColor: revenues.map((v, i) => i === 4 ? 'rgba(214,48,49,0.7)' : 'rgba(108,92,231,0.7)'),
+        yAxisID: 'y'
+      },
+      {
+        label: '주문건수',
+        data: orders,
+        type: 'line',
+        borderColor: '#00b894',
+        backgroundColor: 'rgba(0,184,148,0.1)',
+        tension: 0.4,
+        yAxisID: 'y1'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+    scales: {
+      y: { type: 'linear', position: 'left', ticks: { callback: v => (v/1e7).toFixed(1)+'천만', font: { size: 10 } } },
+      y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// GA4 퍼널 추이 차트
+new Chart(document.getElementById('dailyFunnelChart'), {
+  type: 'line',
+  data: {
+    labels: funnelLabels,
+    datasets: [
+      { label: '세션', data: sessions, borderColor: '#6c5ce7', tension: 0.4, fill: false },
+      { label: '상품조회', data: viewItem, borderColor: '#0984e3', tension: 0.4, fill: false },
+      { label: '장바구니', data: addToCart, borderColor: '#fdcb6e', tension: 0.4, fill: false },
+      { label: '결제시작', data: beginChk, borderColor: '#e17055', tension: 0.4, fill: false },
+      { label: '결제완료', data: purchase, borderColor: '#00b894', tension: 0.4, fill: false }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 10 } } } },
+    scales: { y: { ticks: { font: { size: 10 } } }, x: { ticks: { font: { size: 10 } } } }
+  }
+});
+</script>
+</body>
+</html>
